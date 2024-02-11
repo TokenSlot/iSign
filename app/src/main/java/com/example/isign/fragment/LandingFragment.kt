@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.Navigation
 import com.example.isign.MainActivity
 import com.example.isign.R
 import com.example.isign.databinding.FragmentLandingBinding
@@ -75,15 +78,25 @@ class LandingFragment : Fragment() {
 
     private fun observer() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.state.collect {
-                    state ->
-                if (state.isSignInSuccessful) {
-                    Log.d("TAG", "Sign In Success");
-                    Toast.makeText(requireContext(), "Sign In Success", Toast.LENGTH_LONG).show()
-                } else {
-                    Log.d("TAG", state.signInError.toString());
-                    Toast.makeText(requireContext(), state.signInError.toString(), Toast.LENGTH_LONG).show()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect {
+                        state ->
+                    if (state.isSignInSuccessful) {
+                        Toast.makeText(requireContext(), "Sign In Success", Toast.LENGTH_LONG).show()
+                        navigateToHome()
+                        viewModel.resetState()
+                    }
                 }
+            }
+        }
+    }
+
+    private fun navigateToHome() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                Navigation.findNavController(requireActivity(), R.id.fragmentContainerView).navigate(
+                    R.id.action_landingFragment_to_welcomeFragment
+                )
             }
         }
     }
@@ -110,15 +123,6 @@ class LandingFragment : Fragment() {
             }
         }
     }
-
-    private fun handleResults(task: Task<GoogleSignInAccount>) {
-        if (task.isSuccessful) {
-            Toast.makeText(requireContext(), "SIGN IN COMPLETE", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), task.exception.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
-
 
     override fun onResume() {
         super.onResume()
