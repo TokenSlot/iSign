@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "540670786362",
+    "project_id": "isign-27f4c",
+    "storage_bucket": "isign-27f4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540670786362:android:19b747576933aef01a2e03",
+        "android_client_info": {
+          "package_name": "com.example.isign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3bwsLxNd4KbjMSVNxgr0_9AbPP5xIPs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
