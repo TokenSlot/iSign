@@ -2,6 +2,7 @@ package com.example.isign.fragment
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -67,6 +68,7 @@ class LandingFragment : Fragment() {
         observer()
 
         fragmentLandingBinding.btnSignIn.setOnClickListener {
+            Log.d("TAG", "test");
             onSignInClick()
         }
     }
@@ -76,9 +78,11 @@ class LandingFragment : Fragment() {
             viewModel.state.collect {
                     state ->
                 if (state.isSignInSuccessful) {
-                    Toast.makeText(requireContext().applicationContext, "Sign In Success", Toast.LENGTH_LONG).show()
+                    Log.d("TAG", "Sign In Success");
+                    Toast.makeText(requireContext(), "Sign In Success", Toast.LENGTH_LONG).show()
                 } else {
-                    Toast.makeText(requireContext().applicationContext, state.signInError, Toast.LENGTH_LONG).show()
+                    Log.d("TAG", state.signInError.toString());
+                    Toast.makeText(requireContext(), state.signInError.toString(), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -86,11 +90,16 @@ class LandingFragment : Fragment() {
 
     private fun onSignInClick() {
         lifecycleScope.launch {
-            launcher.launch(googleSignInClient.signInIntent)
+            val signInIntentSender = googleAuthUiClient.signIn()
+            launcher.launch(
+                IntentSenderRequest.Builder(
+                    signInIntentSender ?: return@launch
+                ).build()
+            )
         }
     }
 
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
         result ->
         if (result.resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
