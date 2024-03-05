@@ -1,6 +1,5 @@
 package com.example.isign.fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
@@ -11,14 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.isign.GestureRecognizerHelper
@@ -26,7 +21,6 @@ import com.example.isign.MainViewModel
 import com.example.isign.R
 import com.example.isign.databinding.FragmentCameraBinding
 import com.google.mediapipe.tasks.vision.core.RunningMode
-import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -54,7 +48,7 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
-    private var cameraFacing = CameraSelector.LENS_FACING_FRONT
+    private var cameraFacing = CameraSelector.LENS_FACING_BACK
 
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
@@ -364,6 +358,7 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
                     resultBundle.results.first(),
                     resultBundle.inputImageHeight,
                     resultBundle.inputImageWidth,
+                    cameraFacing,
                     RunningMode.LIVE_STREAM
                 )
 

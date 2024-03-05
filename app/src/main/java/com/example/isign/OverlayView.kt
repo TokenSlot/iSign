@@ -5,7 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
+import androidx.camera.core.CameraSelector
 import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
@@ -15,7 +17,6 @@ import kotlin.math.min
 
 class OverlayView(context: Context?, attrs: AttributeSet?) :
     View(context, attrs) {
-
     private var results: GestureRecognizerResult? = null
     private var linePaint = Paint()
     private var pointPaint = Paint()
@@ -23,6 +24,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
     private var scaleFactor: Float = 1f
     private var imageWidth: Int = 1
     private var imageHeight: Int = 1
+    private var cameraFacing: Int = CameraSelector.LENS_FACING_BACK
 
     init {
         initPaints()
@@ -52,19 +54,35 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
         results?.let { gestureRecognizerResult ->
             for(landmark in gestureRecognizerResult.landmarks()) {
                 for(normalizedLandmark in landmark) {
+                    Log.d("Camera", width.toString())
+                    val pointX =
+                        if (cameraFacing == CameraSelector.LENS_FACING_BACK)
+                            (width - normalizedLandmark.x() * imageWidth * scaleFactor) + width/2.3f
+                        else
+                            normalizedLandmark.x() * imageWidth * scaleFactor
                     canvas.drawPoint(
-                        normalizedLandmark.x() * imageWidth * scaleFactor,
+                        pointX,
                         normalizedLandmark.y() * imageHeight * scaleFactor,
                         pointPaint)
                 }
 
                 HandLandmarker.HAND_CONNECTIONS.forEach {
-                    canvas.drawLine(
-                        gestureRecognizerResult.landmarks().get(0).get(it!!.start()).x() * imageWidth * scaleFactor,
-                        gestureRecognizerResult.landmarks().get(0).get(it.start()).y() * imageHeight * scaleFactor,
-                        gestureRecognizerResult.landmarks().get(0).get(it.end()).x() * imageWidth * scaleFactor,
-                        gestureRecognizerResult.landmarks().get(0).get(it.end()).y() * imageHeight * scaleFactor,
-                        linePaint)
+                    val startX =
+                        if (cameraFacing == CameraSelector.LENS_FACING_BACK)
+                            (width - gestureRecognizerResult.landmarks().get(0).get(it!!.start()).x() * imageWidth * scaleFactor) + width/2.3f
+                        else
+                            gestureRecognizerResult.landmarks().get(0).get(it!!.start()).x() * imageWidth * scaleFactor
+                    val startY =
+                        gestureRecognizerResult.landmarks().get(0).get(it.start()).y() * imageHeight * scaleFactor
+                    val endX =
+                        if (cameraFacing == CameraSelector.LENS_FACING_BACK)
+                            (width - gestureRecognizerResult.landmarks().get(0).get(it.end()).x() * imageWidth * scaleFactor) + width/2.3f
+                        else
+                            gestureRecognizerResult.landmarks().get(0).get(it.end()).x()* imageWidth * scaleFactor
+                    val endY =
+                        gestureRecognizerResult.landmarks().get(0).get(it.end()).y() * imageHeight * scaleFactor
+
+                    canvas.drawLine(startX, startY, endX, endY, linePaint)
                 }
             }
         }
@@ -74,12 +92,14 @@ class OverlayView(context: Context?, attrs: AttributeSet?) :
         gestureRecognizerResult: GestureRecognizerResult,
         imageHeight: Int,
         imageWidth: Int,
+        cameraFacing: Int,
         runningMode: RunningMode = RunningMode.IMAGE
     ) {
         results = gestureRecognizerResult
 
         this.imageHeight = imageHeight
         this.imageWidth = imageWidth
+        this.cameraFacing = cameraFacing
 
         scaleFactor = when (runningMode) {
             RunningMode.IMAGE,

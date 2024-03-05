@@ -31,7 +31,6 @@ class MainViewModel : ViewModel() {
     fun setDelegate(delegate: Int) {
         _delegate = delegate
     }
-
     fun setMinHandDetectionConfidence(confidence: Float) {
         _minHandDetectionConfidence = confidence
     }
