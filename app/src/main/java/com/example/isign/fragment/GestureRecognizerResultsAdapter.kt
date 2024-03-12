@@ -1,9 +1,12 @@
 package com.example.isign.fragment
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.example.isign.MainViewModel
 import com.example.isign.databinding.ItemGestureRecognizerResultBinding
 import com.google.mediapipe.tasks.components.containers.Category
 import java.util.Locale
@@ -15,8 +18,11 @@ class GestureRecognizerResultsAdapter :
         private const val NO_VALUE = "--"
     }
 
+
     private var adapterCategories: MutableList<Category?> = mutableListOf()
     private var adapterSize: Int = 0
+    private var _currentLetter: String = ""
+    val currentLetter: String get() = _currentLetter
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateResults(categories: List<Category>?) {
@@ -49,9 +55,15 @@ class GestureRecognizerResultsAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val currentLetter = adapterCategories[position]?.categoryName() ?: ""
+        setCurrentLetter(currentLetter)
         adapterCategories[position].let { category ->
             holder.bind(category?.categoryName(), category?.score())
         }
+    }
+
+    private fun setCurrentLetter(text: String) {
+        _currentLetter = text
     }
 
     override fun getItemCount(): Int = adapterCategories.size

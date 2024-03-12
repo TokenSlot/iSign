@@ -3,12 +3,16 @@ package com.example.isign.fragment
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.graphics.Color
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -20,6 +24,7 @@ import com.example.isign.GestureRecognizerHelper
 import com.example.isign.MainViewModel
 import com.example.isign.R
 import com.example.isign.databinding.FragmentCameraBinding
+import com.example.isign.databinding.ItemGestureRecognizerResultBinding
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -48,7 +53,7 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
-    private var cameraFacing = CameraSelector.LENS_FACING_BACK
+    private var cameraFacing = CameraSelector.LENS_FACING_FRONT
 
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
@@ -108,6 +113,28 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
             layoutManager = LinearLayoutManager(requireContext())
             adapter = gestureRecognizerResultAdapter
         }
+
+        val origString = "Hellord"
+        val coloredString = SpannableString(origString.uppercase())
+
+        val endIndexRed = 0;
+        val foregroundColorRed = Color.GREEN
+        coloredString.setSpan(
+            ForegroundColorSpan(foregroundColorRed),
+            0,
+            endIndexRed,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        val endIndexBlue = endIndexRed + 1
+        val foregroundColorBlue = Color.RED
+        coloredString.setSpan(
+            ForegroundColorSpan(foregroundColorBlue),
+            endIndexRed,
+            endIndexBlue,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        fragmentCameraBinding.textQuestion.text = coloredString;
 
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
@@ -349,6 +376,8 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
                 } else {
                     gestureRecognizerResultAdapter.updateResults(emptyList())
                 }
+
+                Log.d("Haze", gestureRecognizerResultAdapter.currentLetter)
 
                 fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text =
                     String.format("%d ms", resultBundle.inferenceTime)

@@ -11,6 +11,28 @@
         android:layout_height="match_parent"
         app:scaleType="fillStart" />
 
+    <TextView
+        android:id="@+id/textQuestion"
+        android:text="PLACEHODLERLONGWORD"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="25sp"
+        android:letterSpacing="0.15"
+        android:gravity="center"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/textScore"/>
+
+    <TextView
+        android:id="@+id/textScore"
+        android:text="0"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:textSize="25sp"
+        android:gravity="center"/>
+
     <com.example.isign.OverlayView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
