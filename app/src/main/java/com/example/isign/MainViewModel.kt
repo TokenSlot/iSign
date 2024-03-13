@@ -13,9 +13,16 @@ class MainViewModel : ViewModel() {
 
     private var _dataText: String = "FSL Letter A"
     private var _dataImage: Int = R.drawable.fsl_letter_a
+    private var _isGameMode: Boolean = false
+    private var _hasScore: Boolean = false
+    private var _currentScore: Long = 0
 
     val dataText: String get() = _dataText
     val dataImage: Int get() = _dataImage
+    val isGameMode: Boolean get() = _isGameMode
+    val hasScore: Boolean get() = _hasScore
+    val currentScore: Long get() = _currentScore
+
 
     val currentDelegate: Int get() = _delegate
     val currentMinHandDetectionConfidence: Float
@@ -46,5 +53,13 @@ class MainViewModel : ViewModel() {
     fun setListData(text: String, image: Int) {
         _dataText = text
         _dataImage = image
+    }
+
+    fun setIsGameMode(gameMode: Boolean) {
+        _isGameMode = gameMode
+    }
+
+    fun setCurrentScore(score: Long) {
+        _currentScore = score
     }
 }

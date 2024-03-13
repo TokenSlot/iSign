@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_welcomeFragment_to_landingFragment"
             app:destination="@id/landingFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_leaderboardFragment"
+            app:destination="@id/leaderboardFragment" />
     </fragment>
 
     <fragment
@@ -45,6 +48,9 @@
             app:destination="@id/permissions_fragment"
             app:popUpTo="@id/cameraFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_cameraFragment_to_highScoreFragment"
+            app:destination="@id/highScoreFragment" />
     </fragment>
     <fragment
         android:id="@+id/signListFragment"
@@ -73,4 +79,20 @@
             android:id="@+id/action_landingFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/highScoreFragment"
+        android:name="com.example.isign.fragment.HighScoreFragment"
+        android:label="HighScore"
+        tools:layout="@layout/fragment_high_score">
+        <action
+            android:id="@+id/action_highScoreFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_highScoreFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.isign.fragment.LeaderboardFragment"
+        android:label="Leaderboard" />
 </navigation>

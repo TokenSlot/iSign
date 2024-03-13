@@ -10,10 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:scaleType="fillStart" />
-
+    <TextView
+        android:id="@+id/textTime"
+        android:text="30"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/textQuestion" />
     <TextView
         android:id="@+id/textQuestion"
-        android:text="PLACEHODLERLONGWORD"
+        android:text="PLACEHOLDERLONGWORD"
         android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -25,7 +34,7 @@
 
     <TextView
         android:id="@+id/textScore"
-        android:text="0"
+        android:text="0000"
         android:layout_marginTop="100dp"
         android:textColor="@color/white"
         android:layout_width="match_parent"
@@ -41,6 +50,24 @@
     <include
         android:id="@+id/bottom_sheet_layout"
         layout="@layout/info_bottom_sheet" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnStart"
+        style="@style/ButtonGreen"
+        android:text="@string/btn_game_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/btnSpacer2"/>
+
+    <Space
+        android:id="@+id/btnSpacer2"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/btnChangeCamera"/>
 
     <Button
         android:id="@+id/btnChangeCamera"

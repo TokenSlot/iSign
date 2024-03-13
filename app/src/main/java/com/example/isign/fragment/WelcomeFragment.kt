@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -13,6 +14,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.isign.MainActivity
+import com.example.isign.MainViewModel
 import com.example.isign.R
 import com.example.isign.databinding.FragmentWelcomeBinding
 import com.example.isign.presentation.sign_in.GoogleAuthUiClient
@@ -23,6 +25,8 @@ import kotlinx.coroutines.launch
 class WelcomeFragment : Fragment() {
 
     private var _fragmentWelcomeBinding: FragmentWelcomeBinding? = null
+    private val fragmentWelcomeBinding
+        get() = _fragmentWelcomeBinding!!
 
     private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
@@ -31,6 +35,7 @@ class WelcomeFragment : Fragment() {
         )
     }
 
+    private val viewModel: MainViewModel by activityViewModels()
     private var userData: UserData? = null
 
     private fun observer() {
@@ -47,9 +52,6 @@ class WelcomeFragment : Fragment() {
             }
         }
     }
-
-    private val fragmentWelcomeBinding
-        get() = _fragmentWelcomeBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,10 +71,18 @@ class WelcomeFragment : Fragment() {
         observer()
 
         fragmentWelcomeBinding.btnStart.setOnClickListener {
+            viewModel.setIsGameMode(false)
+            it.findNavController().navigate(R.id.action_welcomeFragment_to_cameraFragment)
+        }
+        fragmentWelcomeBinding.btnGameStart.setOnClickListener {
+            viewModel.setIsGameMode(true)
             it.findNavController().navigate(R.id.action_welcomeFragment_to_cameraFragment)
         }
         fragmentWelcomeBinding.btnListOfSign.setOnClickListener {
             it.findNavController().navigate(R.id.action_welcomeFragment_to_signListFragment)
+        }
+        fragmentWelcomeBinding.btnLeaderboard.setOnClickListener {
+            it.findNavController().navigate(R.id.action_welcomeFragment_to_leaderboardFragment)
         }
         fragmentWelcomeBinding.btnLogout.setOnClickListener {
             signOut()

@@ -1,6 +1,7 @@
 package com.example.isign.fragment
 
 import android.app.Activity
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -71,7 +73,6 @@ class LandingFragment : Fragment() {
         observer()
 
         fragmentLandingBinding.btnSignIn.setOnClickListener {
-            Log.d("TAG", "test");
             onSignInClick()
         }
     }
@@ -102,6 +103,8 @@ class LandingFragment : Fragment() {
     }
 
     private fun onSignInClick() {
+        fragmentLandingBinding.btnSignIn.isEnabled = false
+
         lifecycleScope.launch {
             val signInIntentSender = googleAuthUiClient.signIn()
             launcher.launch(
@@ -120,7 +123,10 @@ class LandingFragment : Fragment() {
                     intent = result.data ?: return@launch
                 )
                 viewModel.onSignInResult(signInResult)
+                fragmentLandingBinding.btnSignIn.isEnabled = true
             }
+        } else {
+            fragmentLandingBinding.btnSignIn.isEnabled = true
         }
     }
 

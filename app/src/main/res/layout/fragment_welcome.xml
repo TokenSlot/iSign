@@ -8,9 +8,10 @@
     tools:context=".fragment.WelcomeFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/profileCard"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnStart"
+        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btnStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileCard"
         app:layout_constraintVertical_chainStyle="packed" />
 
 
@@ -48,29 +49,53 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/btn_camera"
-        app:layout_constraintBottom_toTopOf="@+id/btn_list_of_sign"
+        app:layout_constraintBottom_toTopOf="@+id/btnGameStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_list_of_sign"
+        android:id="@+id/btnGameStart"
         style="@style/ButtonGreen"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="@string/btn_list_of_sign"
-        app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_game_start"
+        app:layout_constraintBottom_toTopOf="@+id/btn_list_of_sign"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnStart" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_list_of_sign"
+        style="@style/ButtonGreen"
+        android:layout_width="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_list_of_sign"
+        app:layout_constraintBottom_toTopOf="@+id/btn_leaderboard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGameStart" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_leaderboard"
+        style="@style/ButtonGreen"
+        android:layout_width="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_leader"
+        app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_list_of_sign" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_logout"
         style="@style/ButtonGreen"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/btn_logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

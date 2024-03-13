@@ -19,7 +19,38 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_cameraFragment_to_highScoreFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_camera_to_permissions">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="highScoreFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="6" />
+                            <option name="y" value="104" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_highScoreFragment_to_cameraFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_highScoreFragment_to_welcomeFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -46,6 +77,18 @@
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="leaderboardFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-178" />
+                            <option name="y" value="-154" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -97,8 +140,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-105" />
-                            <option name="y" value="-265" />
+                            <option name="x" value="-291" />
+                            <option name="y" value="-521" />
                           </Point>
                         </option>
                         <option name="myPositions">

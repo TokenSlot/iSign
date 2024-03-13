@@ -42,8 +42,12 @@
     <string name="home_title">Do Some Signs!</string>
     <string name="home_sub_title">Welcome to home</string>
     <string name="btn_logout">Logout</string>
-    <string name="btn_camera">Camera</string>
+    <string name="btn_camera">Camera Mode</string>
+    <string name="btn_game_start">Start Game</string>
+    <string name="btn_play_again">Play Again</string>
+    <string name="btn_back_home">Main Menu</string>
     <string name="btn_list_of_sign">List Of Signs</string>
+    <string name="btn_leader">Leaderboard</string>
     <string name="started_title">iSign</string>
     <string name="started_subtitle">You Sign, I Define</string>
     <string name="started_sub_title">

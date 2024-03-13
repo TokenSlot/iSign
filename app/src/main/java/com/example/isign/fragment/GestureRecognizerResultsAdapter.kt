@@ -18,9 +18,9 @@ class GestureRecognizerResultsAdapter :
         private const val NO_VALUE = "--"
     }
 
-
     private var adapterCategories: MutableList<Category?> = mutableListOf()
     private var adapterSize: Int = 0
+    private var isGameMode: Boolean = false
     private var _currentLetter: String = ""
     val currentLetter: String get() = _currentLetter
 
@@ -42,6 +42,10 @@ class GestureRecognizerResultsAdapter :
         adapterSize = size
     }
 
+    fun setGameMode(gameMode: Boolean) {
+        isGameMode = gameMode
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -51,7 +55,7 @@ class GestureRecognizerResultsAdapter :
             parent,
             false
         )
-        return ViewHolder(binding)
+        return ViewHolder(binding, isGameMode)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -68,17 +72,19 @@ class GestureRecognizerResultsAdapter :
 
     override fun getItemCount(): Int = adapterCategories.size
 
-    inner class ViewHolder(private val binding: ItemGestureRecognizerResultBinding) :
+    inner class ViewHolder(private val binding: ItemGestureRecognizerResultBinding, private val isGameMode: Boolean) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(label: String?, score: Float?) {
             with(binding) {
-                tvLabel.text = label ?: NO_VALUE
-                tvScore.text = if (score != null) String.format(
-                    Locale.US,
-                    "%.2f",
-                    score
-                ) else NO_VALUE
+                if(isGameMode)
+                    tvLabel.text = if (score != null) String.format(
+                        Locale.US,
+                        "%.2f",
+                        score
+                    ) else NO_VALUE
+                else
+                    tvLabel.text = label ?: NO_VALUE
             }
         }
     }
