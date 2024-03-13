@@ -2,29 +2,30 @@ package com.example.isign.fragment
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.graphics.Color
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.isign.GameManager
+import com.example.isign.GameManagerFactory
 import com.example.isign.GestureRecognizerHelper
 import com.example.isign.MainViewModel
 import com.example.isign.R
 import com.example.isign.databinding.FragmentCameraBinding
-import com.example.isign.databinding.ItemGestureRecognizerResultBinding
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -46,13 +47,24 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
     private val gestureRecognizerResultAdapter: GestureRecognizerResultsAdapter by lazy {
         GestureRecognizerResultsAdapter().apply {
             updateAdapterSize(defaultNumResults)
+            setGameMode(viewModel.isGameMode)
         }
+    }
+    private val gameManagerFactory by lazy {
+        GameManagerFactory(
+            maxDifficulty = 20,
+            context  = requireContext()
+        )
+    }
+    private val gameManager: GameManager by activityViewModels {
+        gameManagerFactory
     }
 
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
+    private var spannableWord: SpannableString? = null
     private var cameraFacing = CameraSelector.LENS_FACING_FRONT
 
     /** Blocking ML operations are performed using this executor */
@@ -66,7 +78,8 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
                 requireActivity(), R.id.fragmentContainerView
             ).navigate(R.id.action_camera_to_permissions)
         }
-
+        gameManager.stopRound()
+        setupGame()
         backgroundExecutor.execute {
             if (gestureRecognizerHelper.isClosed()) {
                 gestureRecognizerHelper.setupGestureRecognizer()
@@ -76,6 +89,7 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
 
     override fun onPause() {
         super.onPause()
+        gameManager.stopRound()
         if (this::gestureRecognizerHelper.isInitialized) {
             viewModel.setMinHandDetectionConfidence(gestureRecognizerHelper.minHandDetectionConfidence)
             viewModel.setMinHandTrackingConfidence(gestureRecognizerHelper.minHandTrackingConfidence)
@@ -89,11 +103,13 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
     override fun onDestroyView() {
         _fragmentCameraBinding = null
         super.onDestroyView()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        gameManager.stopRound()
         backgroundExecutor.shutdown()
-        backgroundExecutor.awaitTermination(
-            Long.MAX_VALUE, TimeUnit.NANOSECONDS
-        )
+        backgroundExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)
     }
 
     override fun onCreateView(
@@ -103,7 +119,53 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
         // Inflate the layout for this fragment
         _fragmentCameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
 
+        setupGame()
+
         return fragmentCameraBinding.root
+    }
+
+    fun handleNextLetter() {
+        val endIndex = gameManager.letterIndex
+        spannableWord?.setSpan(
+            ForegroundColorSpan(Color.GREEN),
+            0,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        val endIndexRed = endIndex + 1
+        spannableWord?.setSpan(
+            ForegroundColorSpan(Color.RED),
+            endIndex,
+            endIndexRed,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        fragmentCameraBinding.textQuestion.text = spannableWord
+    }
+
+    private fun setupGame() {
+        fragmentCameraBinding.textScore.visibility = View.INVISIBLE
+        fragmentCameraBinding.textTime.visibility = View.INVISIBLE
+        fragmentCameraBinding.textQuestion.visibility = View.INVISIBLE
+
+        if (viewModel.isGameMode) {
+            fragmentCameraBinding.btnStart.visibility = View.VISIBLE
+            fragmentCameraBinding.btnStart.isClickable = true
+        } else {
+            fragmentCameraBinding.btnStart.visibility = View.INVISIBLE
+            fragmentCameraBinding.btnStart.isClickable = false
+        }
+    }
+
+    private fun resetGame() {
+        fragmentCameraBinding.btnStart.visibility = View.INVISIBLE
+        fragmentCameraBinding.btnStart.isClickable = false
+
+        fragmentCameraBinding.textScore.visibility = View.VISIBLE
+        fragmentCameraBinding.textTime.visibility = View.VISIBLE
+        fragmentCameraBinding.textQuestion.visibility = View.VISIBLE
+
+        gameManager.startRound()
     }
 
     @SuppressLint("MissingPermission")
@@ -114,27 +176,33 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
             adapter = gestureRecognizerResultAdapter
         }
 
-        val origString = "Hellord"
-        val coloredString = SpannableString(origString.uppercase())
+        setupGame()
 
-        val endIndexRed = 0;
-        val foregroundColorRed = Color.GREEN
-        coloredString.setSpan(
-            ForegroundColorSpan(foregroundColorRed),
-            0,
-            endIndexRed,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        gameManager.gameState.observe(viewLifecycleOwner) { gameState ->
+            when (gameState!!) {
+                GameManager.GameState.IDLE -> {
+                }
+                GameManager.GameState.IN_PROGRESS -> {
+                    fragmentCameraBinding.textScore.text = gameManager.score.value.toString()
+                    spannableWord = SpannableString(gameManager.currentWord.uppercase())
 
-        val endIndexBlue = endIndexRed + 1
-        val foregroundColorBlue = Color.RED
-        coloredString.setSpan(
-            ForegroundColorSpan(foregroundColorBlue),
-            endIndexRed,
-            endIndexBlue,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        fragmentCameraBinding.textQuestion.text = coloredString;
+                    handleNextLetter()
+                }
+                GameManager.GameState.WORD_COMPLETED -> {
+                    fragmentCameraBinding.textScore.text = gameManager.score.value.toString()
+                    gameManager.nextRound()
+                }
+                GameManager.GameState.TIME_UP -> {
+                    gameManager.score.value?.let { viewModel.setCurrentScore(it) }
+                    navigateToScore()
+                }
+            }
+        }
+
+        gameManager.timeRemaining.observe(viewLifecycleOwner) { seconds ->
+            // Update UI with the remaining seconds
+            fragmentCameraBinding.textTime.text = seconds.toString()
+        }
 
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
@@ -157,6 +225,14 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
         initBottomSheetControls()
     }
 
+    private fun navigateToScore() {
+        Navigation.findNavController(
+            requireActivity(), R.id.fragmentContainerView
+        ).navigate(R.id.action_cameraFragment_to_highScoreFragment)
+    }
+
+
+
     private fun initBottomSheetControls() {
         // init bottom sheet settings
         fragmentCameraBinding.bottomSheetLayout.detectionThresholdValue.text =
@@ -171,6 +247,10 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
             String.format(
                 Locale.US, "%.2f", viewModel.currentMinHandPresenceConfidence
             )
+
+        fragmentCameraBinding.btnStart.setOnClickListener {
+            resetGame()
+        }
 
         fragmentCameraBinding.btnChangeCamera.setOnClickListener {
             // Toggle camera facing
@@ -377,7 +457,7 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
                     gestureRecognizerResultAdapter.updateResults(emptyList())
                 }
 
-                Log.d("Haze", gestureRecognizerResultAdapter.currentLetter)
+                gameManager.handleUserInput(gestureRecognizerResultAdapter.currentLetter, this)
 
                 fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text =
                     String.format("%d ms", resultBundle.inferenceTime)
