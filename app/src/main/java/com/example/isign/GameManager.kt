@@ -86,7 +86,8 @@ class GameManager (
          if (_gameState.value != GameState.IN_PROGRESS) return
          if (letterIndex == currentWord.length) return
 
-         if (handSign.equals(currentWord[letterIndex].toString(), ignoreCase = true) || currentWord[letterIndex].toString() == "-") {
+         if (handSign.equals(currentWord[letterIndex].toString(), ignoreCase = true)
+             || currentWord[letterIndex].toString() == "-") {
              lettersCorrect[letterIndex] = true
              addLetterIndex()
 
