@@ -28,4 +28,14 @@
         android:layout_marginTop="27dp"
         android:src="@drawable/fsl_letter_a" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLearn"
+        style="@style/ButtonWhite"
+        android:layout_below="@+id/imageView"
+        android:layout_width="268dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:text="Learn" />
+
 </RelativeLayout>

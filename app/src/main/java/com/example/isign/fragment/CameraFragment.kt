@@ -456,7 +456,6 @@ class CameraFragment : Fragment(), GestureRecognizerHelper.GestureRecognizerList
                 } else {
                     gestureRecognizerResultAdapter.updateResults(emptyList())
                 }
-
                 gameManager.handleUserInput(gestureRecognizerResultAdapter.currentLetter, this)
 
                 fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text =

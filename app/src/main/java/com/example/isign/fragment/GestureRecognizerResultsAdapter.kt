@@ -1,12 +1,9 @@
 package com.example.isign.fragment
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.example.isign.MainViewModel
 import com.example.isign.databinding.ItemGestureRecognizerResultBinding
 import com.google.mediapipe.tasks.components.containers.Category
 import java.util.Locale
@@ -34,6 +31,13 @@ class GestureRecognizerResultsAdapter :
                 adapterCategories[i] = sortedCategories[i]
             }
             adapterCategories.sortedBy { it?.index() }
+            // Update currentLetter with the highest-scored category
+            if (sortedCategories.isNotEmpty()) {
+                setCurrentLetter(sortedCategories.first().categoryName())
+            } else {
+                setCurrentLetter("")
+            }
+
             notifyDataSetChanged()
         }
     }

@@ -1,11 +1,11 @@
 package com.example.isign.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.isign.MainViewModel
@@ -36,5 +36,9 @@ class ListDataFragment : Fragment() {
 
         fragmentListDataBinding.dataText.text = viewModel.dataText
         fragmentListDataBinding.imageView.setImageResource(viewModel.dataImage)
+
+        fragmentListDataBinding.btnLearn.setOnClickListener {
+            it.findNavController().navigate(R.id.action_listDataFragment_to_tutPermFragment)
+        }
     }
 }
