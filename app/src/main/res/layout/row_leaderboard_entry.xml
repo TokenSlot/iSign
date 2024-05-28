@@ -1,46 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@color/mp_color_primary"
-    android:padding="16dp">
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="8dp">
 
     <TextView
-        android:fontFamily="@font/montserrat"
-        android:textColor="@color/white"
-        android:textStyle="bold"
         android:id="@+id/positionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMaxTextSize="52sp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeStepGranularity="2sp"
+        android:fontFamily="@font/montserrat"
+        android:gravity="center"
+        android:text="1"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="#"
-        android:layout_gravity="center_vertical"
-        android:gravity="center" />
+        android:textColor="@color/white"
+        android:textSize="52sp"
+        android:textStyle="bold"
+        android:width="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:fontFamily="@font/montserrat"
-        android:textColor="@color/white"
-        android:textStyle="bold"
         android:id="@+id/nameTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:fontFamily="@font/montserrat"
+        android:gravity="start"
         android:text="Name"
-        android:layout_gravity="center_vertical"
-        android:gravity="center" />
+        android:layout_marginStart="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/positionTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:fontFamily="@font/montserrat"
-        android:textColor="@color/white"
-        android:textStyle="bold"
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:gravity="start"
+        android:text="1251"
+        android:layout_marginEnd="35dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Score"
-        android:layout_gravity="center_vertical"
-        android:gravity="end" />
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

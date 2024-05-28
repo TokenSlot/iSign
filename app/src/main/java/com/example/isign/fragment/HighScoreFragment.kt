@@ -100,8 +100,10 @@ class HighScoreFragment : Fragment() {
     private fun updateUserData(currentScore: Long) {
         val docRef = db.collection("leaderboard").document(userData?.userId!!)
 
+        val name = userData?.username
+
         val userInput = mapOf(
-            "username" to userData?.username,
+            "username" to name!!.split(" ")[0],
             "score" to currentScore
         )
 
